@@ -3,38 +3,15 @@
 Clients = new Meteor.Collection("clients");
 
 if (Meteor.isClient) {
+
   // Client Globals
-  client = 0;
+  Session.set("client", 0);
+  Session.set("currentTime", 0);
+
   // Templates
-    Template.timeToday.get = function () {
-      Deps.autorun( function () {
-        if (Clients.findOne("default")) {
-          date = new Date();
-          client = Clients.findOne("default");
-          dateString = (
-            (date.getHours()).toString()
-            + " " + (date.getMinutes()).toString()
-            + " " + (date.getSeconds()).toString()
-          );
-          return "Beeees";
-        }
-      });
-    }
-Deps.autorun(function () {
-  Template.timeToday.helpers({
-    getTime: function () {
-      return client.time;
-    }
-  });
-});
-
-
-
-
-
-
-
-
+  Template.timeToday.getTime = function () {
+    return Session.get("currentTime");
+  }
 
   Meteor.startup(function () {
     // Execution sequence
@@ -47,12 +24,8 @@ Deps.autorun(function () {
     }
     function startTimeUpdates() {
       timeUpdateLoop = Meteor.setInterval(function () {
-        client = Clients.findOne({account: "default"});
-
-
-
-
-
+        Session.set("client", Clients.findOne({account: "default"}));
+        Session.set("currentTime", Session.get("client").time);
       }, 1000);
     }
   });
