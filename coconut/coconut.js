@@ -34,7 +34,7 @@ if (Meteor.isClient) {
 if (Meteor.isServer) {
   Meteor.startup(function () {
     if (!Clients.findOne({account: "default"})) {
-      var currentTime = Date.now();
+      var currentTime = new Date();
       Clients.insert({
         account: "default",
         time: currentTime 
@@ -43,7 +43,7 @@ if (Meteor.isServer) {
     defaultUser = Clients.findOne({account: "default"});
     timeUpdateLoop = Meteor.setInterval(function () {
     // Time updating loop.
-      var currentTime = Date.now();
+      var currentTime = new Date();
       if (Clients.findOne({account: "default"})) {
         Clients.update({_id: defaultUser._id}, {$set: {time: currentTime}});
       }
